@@ -4,7 +4,7 @@ using CampusNet.Models;
 
 namespace CampusNet.Views;
 
-// Solo presentación en consola: no contiene lógica del grafo.
+
 public class ConsolaView
 {
     public ConsolaView()
