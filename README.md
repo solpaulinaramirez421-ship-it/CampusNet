@@ -6,8 +6,8 @@ Sistema de gestión de red social universitaria desarrollado en **C#** utilizand
 
 ##  Autores
 
-* **Sol Paulina** — *Desarrollo y Lógica* 
-* **Mariana** — *Desarrollo y Arquitectura*
+* **Sol Paulina Ramirez** — *Model y controller* 
+* **Mariana Jimenez** — *View y README*
 
 ---
 
