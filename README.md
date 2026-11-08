@@ -6,8 +6,8 @@ Sistema de gestión de red social universitaria desarrollado en **C#** utilizand
 
 ##  Autores
 
-* **Mariana** — *Desarrollo y Lógica* — [GitHub](https://github.com/Mariana18-jg)
-* **Sol Paulina** — *Desarrollo y Arquitectura*
+* **Sol Paulina** — *Desarrollo y Lógica* 
+* **Mariana** — *Desarrollo y Arquitectura*
 
 ---
 
@@ -32,10 +32,13 @@ CampusNet/
 │
 ├── Controllers/
 │   └── CampusNetController.cs   # Controlador principal con la lógica de ejecución
-├── Models/
-│   ├── Graph.cs                 # Estructura de datos del Grafo Dirigido
+├── Modelos/
+│   ├── Edge.cs                  # Representación de las aristas del grafo
+│   ├── Graph.Consultas.cs       # Métodos de consulta social y métricas
+│   ├── Grafo.Recorridos.cs      # Algoritmos de recorrido BFS y DFS
+│   ├── Gráfico.cs               # Clase principal del Grafo
 │   ├── Rol.cs                   # Enumeración de roles (Estudiante, Profesor, Egresado)
-│   └── ResultadoOperacion.cs    # Respuestas de validación para operaciones CRUD
+│   └── Vértice.cs               # Representación de los nodos (usuarios)
 ├── Views/
 │   └── ConsolaView.cs           # Salida de datos y formato en consola
 └── README.md                    # Documentación del proyecto
