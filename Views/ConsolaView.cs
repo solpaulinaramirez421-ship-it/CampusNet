@@ -1,46 +1,134 @@
+
+using System.Text;
 using CampusNet.Models;
 
 namespace CampusNet.Views;
 
-// Solo presentación en consola: no debe contener lógica del grafo.
-// Cada método tiene un comentario con lo que debe imprimir.
+// Solo presentación en consola: no contiene lógica del grafo.
 public class ConsolaView
 {
-    // Línea separadora con el título del caso de uso (como en el taller de árboles).
-    public void MostrarEncabezado(string titulo) { }
+    public ConsolaView()
+    {
+        // Para que la consola muestre bien las tildes y la ñ.
+        Console.OutputEncoding = Encoding.UTF8;
+    }
 
-    // Imprime un texto tal cual. Con "" imprime una línea en blanco.
-    public void MostrarMensaje(string mensaje) { }
+    public void MostrarEncabezado(string titulo)
+    {
+        Console.WriteLine();
+        Console.WriteLine(new string('=', 60));
+        Console.WriteLine(titulo);
+        Console.WriteLine(new string('=', 60));
+    }
 
-    // Lista de adyacencia: una línea por usuario, con su Id, nombre y rol,
-    // y a quiénes sigue. Ej.: "u1 (Ana, Estudiante) -> u2, u5".
-    // Debe incluir la cantidad de vértices y de aristas.
-    // Datos: grafo.Vertices, grafo.Seguidos(id), grafo.CantidadVertices, grafo.CantidadAristas.
-    public void MostrarGrafo(Graph grafo) { }
+    public void MostrarMensaje(string mensaje)
+    {
+        Console.WriteLine(mensaje);
+    }
 
-    // Resultado de una operación de CRUD. 'operacion' es una descripción ya armada,
-    // ej.: "Agregar usuario u13". Mostrar un texto distinto para cada ResultadoOperacion:
-    // Exito, Duplicado (rechazado), NoExiste e Invalido.
-    public void MostrarResultado(string operacion, ResultadoOperacion resultado) { }
+    // Lista de adyacencia: una línea por usuario con a quiénes sigue.
+    public void MostrarGrafo(Graph grafo)
+    {
+        Console.WriteLine($"Grafo dirigido: {grafo.CantidadVertices} usuarios, {grafo.CantidadAristas} relaciones");
 
-    // BFS: usuario de origen, orden de visita y cantidad de vértices alcanzados
-    // (por ejemplo "5 de 12 vértices", contando el propio origen).
-    public void MostrarBfs(Graph grafo, string origen, List<string> orden) { }
+        foreach (Vertex usuario in grafo.Vertices)
+        {
+            IReadOnlyList<string> seguidos = grafo.Seguidos(usuario.Id);
+            string destino = seguidos.Count == 0 ? "(no sigue a nadie)" : string.Join(", ", seguidos);
+            string izquierda = $"{usuario.Id} ({usuario.Nombre}, {usuario.Rol})";
 
-    // DFS completo: orden de descubrimiento y los ciclos encontrados,
-    // cada uno con el formato "A -> B -> C -> A". Si no hay, un mensaje que lo indique.
-    // Datos: resultado.OrdenDescubrimiento, resultado.Ciclos, resultado.TieneCiclos.
-    public void MostrarDfs(ResultadoDfs resultado) { }
+            Console.WriteLine($"  {izquierda.PadRight(38)}-> {destino}");
+        }
+    }
 
-    // Lista de usuarios de una consulta (sin seguidores, influyentes, activos).
-    // Si 'detalle' no es null, se llama con cada usuario y se imprime al lado
-    // (por ejemplo "seguidores: 4"). Si la lista está vacía, indicarlo.
-    public void MostrarUsuarios(string titulo, IEnumerable<Vertex> usuarios, Func<Vertex, string>? detalle = null) { }
+    public void MostrarResultado(string operacion, ResultadoOperacion resultado)
+    {
+        string mensaje = resultado switch
+        {
+            ResultadoOperacion.Exito => "OK",
+            ResultadoOperacion.Duplicado => "RECHAZADO: ya existe (duplicado)",
+            ResultadoOperacion.NoExiste => "RECHAZADO: no existe (usuario o relación)",
+            ResultadoOperacion.Invalido => "RECHAZADO: datos inválidos",
+            _ => "Resultado desconocido"
+        };
 
-    // Respuesta a "¿A puede llegar a B?": sí o no, con los dos Ids.
-    public void MostrarAlcanzabilidad(string origen, string destino, bool alcanzable) { }
+        Console.WriteLine($"{operacion}: {mensaje}");
+    }
 
-    // Tabla de métricas: por cada usuario, Id, nombre, rol, grado de entrada y grado de salida.
-    // Datos: grafo.Vertices, grafo.GradoEntrada(id), grafo.GradoSalida(id).
-    public void MostrarMetricas(Graph grafo) { }
+    public void MostrarBfs(Graph grafo, string origen, List<string> orden)
+    {
+        Console.WriteLine($"BFS desde {origen}:");
+
+        if (orden.Count == 0)
+        {
+            Console.WriteLine("  El usuario no existe.");
+            return;
+        }
+
+        Console.WriteLine($"  Orden de visita: {string.Join(" -> ", orden)}");
+        Console.WriteLine($"  Vértices alcanzados: {orden.Count} de {grafo.CantidadVertices}");
+    }
+
+    public void MostrarDfs(ResultadoDfs resultado)
+    {
+        Console.WriteLine($"  Orden de descubrimiento: {string.Join(" -> ", resultado.OrdenDescubrimiento)}");
+        Console.WriteLine($"  Vértices descubiertos: {resultado.OrdenDescubrimiento.Count}");
+
+        if (!resultado.TieneCiclos)
+        {
+            Console.WriteLine("  Ciclos: no se encontraron ciclos dirigidos.");
+            return;
+        }
+
+        Console.WriteLine($"  Ciclos dirigidos encontrados: {resultado.Ciclos.Count}");
+        foreach (List<string> ciclo in resultado.Ciclos)
+            Console.WriteLine($"    {string.Join(" -> ", ciclo)}");
+    }
+
+    public void MostrarUsuarios(string titulo, IEnumerable<Vertex> usuarios, Func<Vertex, string>? detalle = null)
+    {
+        Console.WriteLine();
+        Console.WriteLine($"{titulo}:");
+
+        List<Vertex> lista = usuarios.ToList();
+        if (lista.Count == 0)
+        {
+            Console.WriteLine("  (ninguno)");
+            return;
+        }
+
+        foreach (Vertex usuario in lista)
+        {
+            string extra = detalle != null ? $" - {detalle(usuario)}" : "";
+            Console.WriteLine($"  {usuario.Id} {usuario.Nombre} ({usuario.Rol}){extra}");
+        }
+    }
+
+    public void MostrarAlcanzabilidad(string origen, string destino, bool alcanzable)
+    {
+        string respuesta = alcanzable ? "SÍ" : "NO";
+        Console.WriteLine($"¿{origen} puede llegar a {destino}? {respuesta}");
+    }
+
+    // Tabla de grados por usuario.
+    public void MostrarMetricas(Graph grafo)
+    {
+        Console.WriteLine("Métricas por usuario (entrada = seguidores, salida = a cuántos sigue):");
+        Console.WriteLine(string.Format("{0,-6}{1,-20}{2,-12}{3,8}{4,8}", "Id", "Nombre", "Rol", "Entrada", "Salida"));
+        Console.WriteLine(new string('-', 54));
+
+        foreach (Vertex usuario in grafo.Vertices)
+        {
+            Console.WriteLine(string.Format(
+                "{0,-6}{1,-20}{2,-12}{3,8}{4,8}",
+                usuario.Id,
+                usuario.Nombre,
+                usuario.Rol,
+                grafo.GradoEntrada(usuario.Id),
+                grafo.GradoSalida(usuario.Id)));
+        }
+
+        Console.WriteLine(new string('-', 54));
+        Console.WriteLine($"Total: {grafo.CantidadVertices} usuarios y {grafo.CantidadAristas} relaciones");
+    }
 }
