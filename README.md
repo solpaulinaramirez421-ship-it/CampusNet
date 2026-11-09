@@ -108,14 +108,13 @@ Operaciones aplicadas: agregar U13, agregar U13 → U01 y U13 → U04, eliminar 
 - **Más activos:** U01 y U03 siguen con 4. U04 baja a 1 porque perdió su relación con U09.
 - Los dos ciclos se mantienen: ninguna de las relaciones eliminadas formaba parte de ellos. El DFS final los detecta de nuevo.
 
-``````markdown
 ## Evidencia de ejecución
 
 `````text
 ============================================================
 CASO 1: CONSTRUCCIÓN DEL GRAFO
 Grafo dirigido vacío creado.
-`````
+
 Insertando usuarios:
 Agregar usuario U01 (Ana Torres, Estudiante): OK
 Agregar usuario U02 (Bruno Ríos, Estudiante): OK
@@ -354,6 +353,4 @@ DFS completo sobre la estructura final:
   Ciclos dirigidos encontrados: 2
     U01 -> U02 -> U03 -> U01
     U04 -> U06 -> U07 -> U10 -> U04
-````
-````
-
+```
