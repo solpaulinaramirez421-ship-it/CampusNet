@@ -109,6 +109,8 @@ Operaciones aplicadas: agregar U13, agregar U13 → U01 y U13 → U04, eliminar 
 - Los dos ciclos se mantienen: ninguna de las relaciones eliminadas formaba parte de ellos. El DFS final los detecta de nuevo.
 
 ## Evidencia de ejecución
+`````text
+   `````
 
 ============================================================
 CASO 1: CONSTRUCCIÓN DEL GRAFO
@@ -347,6 +349,9 @@ Usuarios más activos en la estructura final:
   U01 Ana Torres (Estudiante) - sigue a: 4
   U03 Carla Mejía (Profesor) - sigue a: 4
 
+`````markdown
+   ````
+   ````
 DFS completo sobre la estructura final:
   Orden de descubrimiento: U01 -> U02 -> U03 -> U04 -> U06 -> U07 -> U10 -> U05 -> U08 -> U11 -> U12 -> U13
   Vértices descubiertos: 12
